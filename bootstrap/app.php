@@ -14,5 +14,25 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (
+            \App\Domain\Wallet\Exceptions\InsufficientFundsException $e
+        ) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        });
+
+        $exceptions->render(function (
+            \App\Domain\Wallet\Exceptions\WalletFrozenException $e
+        ) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        });
+
+        $exceptions->render(function (
+            \App\Domain\Wallet\Exceptions\CurrencyMismatchException $e
+        ) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        });
+
+        $exceptions->render(function (\DomainException $e) {
+            return response()->json(['message' => $e->getMessage()], 422);
+        });
     })->create();
